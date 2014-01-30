@@ -170,12 +170,23 @@ define(function (require, exports, module) {
 					state.inHandlebar = false;
 					return "bracket";
 				}
-				if (stream.match(/^[\w\d\-\_\$]+\s*=/, false)) {
+				if (!state.attributeKeyword && !state.attributeAssignment && !state.attributeValue && stream.match(/^[\w\d\-\_\$]+\s*=/, false)) {
+					state.argumentList = false;
 					stream.match(/^[\w\d\-\_\$]+/, true);
+					if (/Binding$/.test(stream.current())) {
+						stream.backUp(7);
+						state.attributeKeyword = true;
+						return "number";
+					}
 					stream.eatSpace();
 					state.attributeAssignment = true;
-					state.argumentList = false;
-					return "variable";
+					return "number";
+				}
+				if (state.attributeKeyword) {
+					stream.skipTo("=");
+					state.attributeKeyword = false;
+					state.attributeAssignment = true;
+					return "keyword";
 				}
 				if (state.attributeAssignment) {
 					state.attributeAssignment = false;
@@ -191,11 +202,11 @@ define(function (require, exports, module) {
 					if (stream.match(/^"([^\\"]|\\\\|\\")*"/, false)) {
 						stream.match(/^"([^\\"]|\\\\|\\")*"/, true);
 						stream.eatSpace();
-						return "quote";
+						return "atom";
 					}
 					if (stream.match(/^'([^\\']|\\\\|\\')*'/, true)) {
 						stream.eatSpace();
-						return "quote";
+						return "atom";
 					}
 					stream.match(/^[^\s]+/, true);
 					console.log("Invalid attribute value");
@@ -205,11 +216,11 @@ define(function (require, exports, module) {
 					if (stream.match(/^"([^\\"]|\\\\|\\")*"/, false)) {
 						stream.match(/^"([^\\"]|\\\\|\\")*"/, true);
 						stream.eatSpace();
-						return "quote";
+						return "atom";
 					}
 					if (stream.match(/^'([^\\']|\\\\|\\')*'/, true)) {
 						stream.eatSpace();
-						return "quote";
+						return "atom";
 					}
 					if (stream.match(/^[A-Za-z0-9\._$]+/, true)) {
 						stream.eatSpace();
@@ -221,7 +232,7 @@ define(function (require, exports, module) {
 				return "invalidchar";
 			}
 		};
-		return CodeMirror.overlayMode(mustacheOverlay, CodeMirror.getMode(config, parserConfig.backdrop || "text/html"));
+		return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || "text/html"), mustacheOverlay);
 		//return mustacheOverlay;
 	});
 

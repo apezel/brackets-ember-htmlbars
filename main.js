@@ -57,16 +57,10 @@ define(function (require, exports, module) {
     };
   }
 
-  CodeMirror.defineMode("liquid", function(config, parserConfig) {
+  CodeMirror.defineMode("handlebars", function(config, parserConfig) {
     var mustacheOverlay = {
       token: function(stream, state) {
         var ch;
-        if (stream.match("{%")) {
-          while ((ch = stream.next()) != null)
-            if (ch == "%" && stream.next() == "}") break;
-          stream.eat("%");
-          return "def";
-        }
         if (stream.match("{{")) {
           while ((ch = stream.next()) != null)
             if (ch == "}" && stream.next() == "}") break;
@@ -80,10 +74,10 @@ define(function (require, exports, module) {
     return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || "text/html"), mustacheOverlay);
   });
 
-  LanguageManager.defineLanguage("liquid", {
-      "name": "liquid",
-      "mode": "liquid",
-      "fileExtensions": ["liquid"],
+  LanguageManager.defineLanguage("handlebars", {
+      "name": "handlebars",
+      "mode": "handlebars",
+      "fileExtensions": ["hbr"],
       "blockComment": ["<!--", "-->"]
   });
 });

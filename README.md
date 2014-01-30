@@ -1,4 +1,4 @@
-liquid-brackets
-===============
+Handlebars Template highlighter
+===============================
 
-A syntax highlighting plugin for liquid in brackets
+A syntax highlighting plugin for Handlebars in the Brackets editor.

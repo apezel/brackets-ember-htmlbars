@@ -235,11 +235,14 @@ define(function (require, exports, module) {
 		return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || "text/html"), mustacheOverlay);
 		//return mustacheOverlay;
 	});
+    
+//    var language = LanguageManager.getLanguage("html");
+
 
 	LanguageManager.defineLanguage("handlebars", {
 		"name": "handlebars",
 		"mode": "handlebars",
 		"fileExtensions": ["hbr", "handlebars", "hbs"],
-		"blockComment": ["<!--", "-->"]
+		"blockComment": ["{{!--", "--}}"]
 	});
 });

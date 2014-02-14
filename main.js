@@ -239,7 +239,7 @@ define(function (require, exports, module) {
 	LanguageManager.defineLanguage("handlebars", {
 		"name": "handlebars",
 		"mode": "handlebars",
-		"fileExtensions": ["hbr"],
+		"fileExtensions": ["hbr", "handlebars", "hbs"],
 		"blockComment": ["<!--", "-->"]
 	});
 });

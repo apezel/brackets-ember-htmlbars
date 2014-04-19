@@ -1,18 +1,20 @@
-/*jslint devel:true */
-var define, brackets, CodeMirror;
+/* jslint devel:true */
+/* global define, brackets */
+
 define(function (require, exports, module) {
 	'use strict';
 
 	var LanguageManager = brackets.getModule("language/LanguageManager");
+	var codeMirror = brackets.getModule("thirdparty/CodeMirror2/lib/codemirror");
 
 	// Include `overlayMode` code mirror plugin
-	if (!CodeMirror.overlayMode) {
-		CodeMirror.overlayMode = function (base, overlay, combine) {
+	if (!codeMirror.overlayMode) {
+		codeMirror.overlayMode = function (base, overlay, combine) {
 			return {
 				startState: function () {
 					return {
-						base: CodeMirror.startState(base),
-						overlay: CodeMirror.startState(overlay),
+						base: codeMirror.startState(base),
+						overlay: codeMirror.startState(overlay),
 						basePos: 0,
 						baseCur: null,
 						overlayPos: 0,
@@ -21,8 +23,8 @@ define(function (require, exports, module) {
 				},
 				copyState: function (state) {
 					return {
-						base: CodeMirror.copyState(base, state.base),
-						overlay: CodeMirror.copyState(overlay, state.overlay),
+						base: codeMirror.copyState(base, state.base),
+						overlay: codeMirror.copyState(overlay, state.overlay),
 						basePos: state.basePos,
 						baseCur: null,
 						overlayPos: state.overlayPos,
@@ -78,7 +80,7 @@ define(function (require, exports, module) {
 		};
 	}
 
-	CodeMirror.defineMode("handlebars", function (config, parserConfig) {
+	codeMirror.defineMode("handlebars", function (config, parserConfig) {
 		var mustacheOverlay = {
 			startState: function () {
 				return {
@@ -87,37 +89,48 @@ define(function (require, exports, module) {
 					errorTerminatesOn: null,
 					opening: false,
 					closing: false,
-					helperName: false
+					helperName: false,
+					comment: false,
+					safeComment: false
 				};
 			},
 			token: function (stream, state) {
 				/*jslint regexp:true */
 				stream.eatSpace();
 				if (!state.inHandlebar) {
-					if (stream.eat('{')) {
+					if (stream.match('{{')) {
+						stream.eatSpace();
+						state.inHandlebar = true;
+						state.helperName = true;
+						state.closing = false;
+						state.opening = false;
+						state.doNotEscape = false;
+						state.comment = false;
+
 						if (stream.eat('{')) {
+							//output HTML
+							state.doNotEscape = true;
 							stream.eatSpace();
-							state.inHandlebar = true;
-							state.helperName = true;
-							state.closing = false;
-							state.opening = false;
-							state.doNotEscape = false;
-							if (stream.eat('{')) {
-								//output HTML
-								state.doNotEscape = true;
-								stream.eatSpace();
-								return "operator";
-							}
-							if (stream.eat('#')) {
-								//tag start
-								state.opening = true;
-							} else if (stream.eat("/")) {
-								//tag end
-								state.closing = true;
-							}
-							stream.eatSpace();
-							return "bracket";
+							return "operator";
 						}
+						if (stream.eat('!')) {
+							stream.backUp(1);
+							state.comment = true;
+							if (stream.match('!--')) {
+								stream.backUp(3);
+								state.safeComment = true;
+							}
+							return "comment";
+						}
+						if (stream.eat('#')) {
+							//tag start
+							state.opening = true;
+						} else if (stream.eat("/")) {
+							//tag end
+							state.closing = true;
+						}
+						stream.eatSpace();
+						return "bracket";
 					}
 					if (stream.next() === null && state.moustacheStack.length > 0) {
 						console.log("Unclosed tags: ", moustacheStack);
@@ -125,10 +138,24 @@ define(function (require, exports, module) {
 					}
 					return null;
 				}
+				// Since comments can contain }} it needs to be processed first
+				if(state.comment) {
+					if((state.safeComment === true && stream.match('--}}')) || (state.safeComment === false && stream.match('}}'))) {
+						state.comment = false;
+						state.inHandlebar = false;
+						state.helperName = false;
+						state.safeComment = false;
+					} else {
+						stream.next();
+					}
+
+					return "comment";
+				}
 				if (state.helperName) {
 					state.helperName = false;
-					if (!state.opening && !state.closing && stream.match(/^[\w\d\-\_\$]+\s*\}\}/, false)) {
-						stream.match(/^[\w\d\-\_\$\.]+/, true);
+
+					if (!state.opening && !state.closing && stream.match(/^[\w\d\-\_\$\.\/\@]+\s*\}\}/, false)) {
+						stream.match(/^[\w\d\-\_\$\.\/\@]+/, true);
 						stream.eatSpace();
 						return "variable";
 					}
@@ -227,22 +254,28 @@ define(function (require, exports, module) {
 						return "variable";
 					}
 				}
-				;
+
 				console.log("Bad data: ", stream.next(), state);
 				return "invalidchar";
 			}
 		};
-		return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || "text/html"), mustacheOverlay);
-		//return mustacheOverlay;
+		return codeMirror.overlayMode(codeMirror.getMode(config, parserConfig.backdrop || "text/html"), mustacheOverlay);
 	});
-    
-//    var language = LanguageManager.getLanguage("html");
 
+	var fileExtensions = ["hbr"]; // Pre Sprint 38
+	var htmlLanguage = LanguageManager.getLanguage("html");
+
+	if(htmlLanguage !== null && !!htmlLanguage.removeFileExtension) { // Language.removeFileExtension was introduced in Sprint 38, github.com/adobe/brackets/issues/6873
+		htmlLanguage.removeFileExtension("hbr")
+		htmlLanguage.removeFileExtension("hbs")
+		htmlLanguage.removeFileExtension("handlebars")
+		fileExtensions = ["hbr", "handlebars", "hbs"];
+	}
 
 	LanguageManager.defineLanguage("handlebars", {
 		"name": "handlebars",
 		"mode": "handlebars",
-		"fileExtensions": ["hbr", "handlebars", "hbs"],
+		"fileExtensions": fileExtensions,
 		"blockComment": ["{{!--", "--}}"]
 	});
 });

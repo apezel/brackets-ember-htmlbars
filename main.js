@@ -133,7 +133,7 @@ define(function (require, exports, module) {
 						return "bracket";
 					}
 					if (stream.next() === null && state.moustacheStack.length > 0) {
-						console.log("Unclosed tags: ", moustacheStack);
+						console.log("Unclosed tags: ", state.moustacheStack);
 						return "invalidchar";
 					}
 					return null;
@@ -266,9 +266,9 @@ define(function (require, exports, module) {
 	var htmlLanguage = LanguageManager.getLanguage("html");
 
 	if(htmlLanguage !== null && !!htmlLanguage.removeFileExtension) { // Language.removeFileExtension was introduced in Sprint 38, github.com/adobe/brackets/issues/6873
-		htmlLanguage.removeFileExtension("hbr")
-		htmlLanguage.removeFileExtension("hbs")
-		htmlLanguage.removeFileExtension("handlebars")
+		htmlLanguage.removeFileExtension("hbr");
+		htmlLanguage.removeFileExtension("hbs");
+		htmlLanguage.removeFileExtension("handlebars");
 		fileExtensions = ["hbr", "handlebars", "hbs"];
 	}
 

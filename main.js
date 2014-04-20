@@ -1,11 +1,10 @@
-/* jslint devel:true */
-/* global define, brackets */
+/* global define, brackets, console */
 
-define(function (require, exports, module) {
+define(function () {
   'use strict';
 
-  var LanguageManager = brackets.getModule("language/LanguageManager");
-  var codeMirror = brackets.getModule("thirdparty/CodeMirror2/lib/codemirror");
+  var LanguageManager = brackets.getModule('language/LanguageManager');
+  var codeMirror = brackets.getModule('thirdparty/CodeMirror2/lib/codemirror');
 
   // Include `overlayMode` code mirror plugin
   if (!codeMirror.overlayMode) {
@@ -51,7 +50,7 @@ define(function (require, exports, module) {
             return state.baseCur;
           }
           if (state.baseCur !== null && combine) {
-            return state.baseCur + " " + state.overlayCur;
+            return state.baseCur + ' ' + state.overlayCur;
           }
           return state.overlayCur;
         },
@@ -80,7 +79,7 @@ define(function (require, exports, module) {
     };
   }
 
-  codeMirror.defineMode("handlebars", function (config, parserConfig) {
+  codeMirror.defineMode('handlebars', function (config, parserConfig) {
     var mustacheOverlay = {
       startState: function () {
         return {
@@ -112,7 +111,7 @@ define(function (require, exports, module) {
               //output HTML
               state.doNotEscape = true;
               stream.eatSpace();
-              return "operator";
+              return 'operator';
             }
             if (stream.eat('!')) {
               stream.backUp(1);
@@ -121,21 +120,21 @@ define(function (require, exports, module) {
                 stream.backUp(3);
                 state.safeComment = true;
               }
-              return "comment";
+              return 'comment';
             }
             if (stream.eat('#')) {
               //tag start
               state.opening = true;
-            } else if (stream.eat("/")) {
+            } else if (stream.eat('/')) {
               //tag end
               state.closing = true;
             }
             stream.eatSpace();
-            return "bracket";
+            return 'bracket';
           }
           if (stream.next() === null && state.moustacheStack.length > 0) {
-            console.log("Unclosed tags: ", state.moustacheStack);
-            return "invalidchar";
+            console.log('Unclosed tags: ', state.moustacheStack);
+            return 'invalidchar';
           }
           return null;
         }
@@ -150,7 +149,7 @@ define(function (require, exports, module) {
             stream.next();
           }
 
-          return "comment";
+          return 'comment';
         }
         if (state.helperName) {
           state.helperName = false;
@@ -158,7 +157,7 @@ define(function (require, exports, module) {
           if (!state.opening && !state.closing && stream.match(/^[\w\d\-\_\$\.\/\@]+\s*\}\}/, false)) {
             stream.match(/^[\w\d\-\_\$\.\/\@]+/, true);
             stream.eatSpace();
-            return "variable";
+            return 'variable';
           }
           if (stream.match(/^[\w\d\-\_\$]+/, false)) {
             stream.match(/^[\w\d\-\_\$]+/, true);
@@ -168,41 +167,41 @@ define(function (require, exports, module) {
               state.endOnly = true;
               if (state.moustacheStack.pop() !== stream.current()) {
                 console.log('Mismatched tags');
-                return "invalidchar";
+                return 'invalidchar';
               }
-              return "tag";
+              return 'tag';
             }
             if (state.opening) {
               stream.opening = false;
               state.moustacheStack.push(stream.current());
             }
             state.argumentList = true;
-            return "tag";
+            return 'tag';
           }
           stream.next();
-          return "invalidchar";
+          return 'invalidchar';
         }
         if (state.endOnly) {
           state.endOnly = false;
           if (stream.match('}}', true)) {
             stream.eatSpace();
             state.inHandlebar = false;
-            return "bracket";
+            return 'bracket';
           }
-          console.log("Bad end char");
+          console.log('Bad end char');
           stream.next();
-          return "invalidchar";
+          return 'invalidchar';
         }
         if (state.doNotEscape && stream.match('}}}', true)) {
           state.argumentList = false;
           state.inHandlebar = false;
           state.doNotEscape = false;
-          return "operator";
+          return 'operator';
         }
         if (stream.match('}}', true)) {
           state.argumentList = false;
           state.inHandlebar = false;
-          return "bracket";
+          return 'bracket';
         }
         if (!state.attributeKeyword && !state.attributeAssignment && !state.attributeValue && stream.match(/^[\w\d\-\_\$]+\s*=/, false)) {
           state.argumentList = false;
@@ -210,78 +209,78 @@ define(function (require, exports, module) {
           if (/Binding$/.test(stream.current())) {
             stream.backUp(7);
             state.attributeKeyword = true;
-            return "number";
+            return 'number'; 
           }
           stream.eatSpace();
           state.attributeAssignment = true;
-          return "number";
+          return 'number';
         }
         if (state.attributeKeyword) {
-          stream.skipTo("=");
+          stream.skipTo('=');
           state.attributeKeyword = false;
           state.attributeAssignment = true;
-          return "keyword";
+          return 'keyword';
         }
         if (state.attributeAssignment) {
           state.attributeAssignment = false;
           state.attributeValue = true;
           if (stream.next() !== '=') {
-            console.log("Expected =");
-            return "invalidchar";
+            console.log('Expected =');
+            return 'invalidchar';
           }
-          return "operator";
-        }
+          return 'operator';
+        } 
         if (state.attributeValue) {
           state.attributeValue = false;
           if (stream.match(/^"([^\\"]|\\\\|\\")*"/, false)) {
-            stream.match(/^"([^\\"]|\\\\|\\")*"/, true);
+            stream.match(/^"([^\\"]|\\\\|\\")*'/, true);
             stream.eatSpace();
-            return "atom";
+            return 'atom';
           }
-          if (stream.match(/^'([^\\']|\\\\|\\')*'/, true)) {
+          if (stream.match(/^"([^\\"]|\\\\|\\")*"/, true)) {
             stream.eatSpace();
-            return "atom";
+            return 'atom';
           }
           stream.match(/^[^\s]+/, true);
-          console.log("Invalid attribute value");
-          return "invalidchar";
+          console.log('Invalid attribute value');
+          return 'invalidchar';
         }
         if (state.argumentList) {
           if (stream.match(/^"([^\\"]|\\\\|\\")*"/, false)) {
             stream.match(/^"([^\\"]|\\\\|\\")*"/, true);
             stream.eatSpace();
-            return "atom";
+            return 'atom';
           }
-          if (stream.match(/^'([^\\']|\\\\|\\')*'/, true)) {
+          if (stream.match(/^"([^\\"]|\\\\|\\")*"/, true)) {
             stream.eatSpace();
-            return "atom";
+            return 'atom';
           }
           if (stream.match(/^[A-Za-z0-9\._$]+/, true)) {
             stream.eatSpace();
-            return "variable";
+            return 'variable';
           }
         }
 
-        console.log("Bad data: ", stream.next(), state);
-        return "invalidchar";
+        console.log('Bad data: ', stream.next(), state);
+        return 'invalidchar';
       }
     };
-    return codeMirror.overlayMode(codeMirror.getMode(config, parserConfig.backdrop || "text/html"), mustacheOverlay);
+    return codeMirror.overlayMode(codeMirror.getMode(config, parserConfig.backdrop || 'text/html'), mustacheOverlay);
   });
 
-  fileExtensions = ["handlebars", "hbs"];
-  var htmlLanguage = LanguageManager.getLanguage("html");
+  var fileExtensions = ['handlebars', 'hbs'];
+  var htmlLanguage = LanguageManager.getLanguage('html');
 
   if(htmlLanguage !== null) {
-    htmlLanguage.removeFileExtension("hbr");
-    htmlLanguage.removeFileExtension("hbs");
-    htmlLanguage.removeFileExtension("handlebars");    
+    htmlLanguage.removeFileExtension('hbr');
+    htmlLanguage.removeFileExtension('hbs');
+    htmlLanguage.removeFileExtension('handlebars');    
   }
 
-  LanguageManager.defineLanguage("handlebars", {
-    "name": "handlebars",
-    "mode": "handlebars",
-    "fileExtensions": fileExtensions,
-    "blockComment": ["{{!--", "--}}"]
+  LanguageManager.defineLanguage('handlebars', {
+    'name': 'handlebars',
+    'mode': 'handlebars',
+    'fileExtensions': fileExtensions,
+    'blockComment': ['{{!--', '--}}']
   });
 });

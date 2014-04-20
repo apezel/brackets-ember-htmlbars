@@ -1,4 +1,4 @@
-Handlebars templates highlighter for Brackets
+Handlebars highlighter for Brackets [![Build Status](https://travis-ci.org/karl-sjogren/brackets-handlebars-templates.svg?branch=master)](https://travis-ci.org/karl-sjogren/brackets-handlebars-templates)
 ===============================
 
 A syntax highlighting plugin for [Handlebars templates](http://handlebarsjs.com/) in the [Brackets editor](http://brackets.io/).

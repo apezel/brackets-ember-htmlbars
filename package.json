@@ -1,12 +1,17 @@
 {
-    "name": "handlebars",
-    "title": "Handlebars Syntax Highlighter",
-    "description": "Add syntax highlighting support for the handlebars template language.",
-    "homepage": "https://github.com/Fordi/handlebars-templates",
-    "version": "1.0.1",
-    "author": "Bryan Elliott (http://codemonkeybryan.com)",
-    "license": "MIT",
-    "engines": {
-        "brackets": ">=0.24.0"
-    }
+  "name": "handlebars",
+  "title": "Handlebars Syntax Highlighter",
+  "description": "Add syntax highlighting support for the handlebars template language.",
+  "homepage": "https://github.com/karl-sjogren/brackets-handlebars-templates",
+  "version": "1.1.0",
+  "author": "Karl-Johan Sjögren (http://karl-sjogren.com)",
+  "license": "MIT",
+  "engines": {
+    "brackets": ">=0.38.0"
+  }, 
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-watch": "~0.6.1"
+  }
 }

@@ -1,7 +1,8 @@
-/* globals module */
+/* globals module, require */
 module.exports = function(grunt) {
   'use strict';
 
+  var pkg = require('./package.json');
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
@@ -19,11 +20,32 @@ module.exports = function(grunt) {
     watch: {
       files: ['<%= jshint.files %>'],
       tasks: ['jshint']
+    },
+    compress: {
+      main: {
+        options: {
+          archive: function () {
+            // The global value git.tag is set by another task
+            return 'handlebars-templates-' + pkg.version + '.zip';
+          },
+          pretty: true
+        },
+        files: [
+          {
+            expand: true,
+            src: ['main.js', 'package.json', 'LICENSE'],
+            dest: '/'
+          }
+        ]
+      }
     }
   });
+
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-compress');
 
   grunt.registerTask('default', ['jshint', 'watch']);
   grunt.registerTask('test', ['jshint']);
+  grunt.registerTask('dist', ['jshint', 'compress']);
 }; 

@@ -6,12 +6,19 @@
   "version": "1.1.0",
   "author": "Karl-Johan Sjögren (http://karl-sjogren.com)",
   "license": "MIT",
+  "categories": "language",
+  "keywords": [
+    "handlebars",
+    "hbs",
+    "ember"
+  ],
   "engines": {
-    "brackets": ">=0.38.0"
-  }, 
+    "brackets": ">=0.38"
+  },
   "devDependencies": {
     "grunt": "~0.4.4",
     "grunt-contrib-jshint": "~0.10.0",
-    "grunt-contrib-watch": "~0.6.1"
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-contrib-compress": "~0.8.0"
   }
 }

@@ -10,7 +10,10 @@ module.exports = function(grunt) {
         'undef': true,
         'unused': true,
         'quotmark': 'single',
-        'strict': true
+        'strict': true,
+        'eqeqeq': true,
+        'indent': 2,
+        'curly': true
       }
     },
     watch: {

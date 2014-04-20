@@ -269,14 +269,13 @@ define(function (require, exports, module) {
     return codeMirror.overlayMode(codeMirror.getMode(config, parserConfig.backdrop || "text/html"), mustacheOverlay);
   });
 
-  var fileExtensions = ["hbr"]; // Pre Sprint 38
+  fileExtensions = ["handlebars", "hbs"];
   var htmlLanguage = LanguageManager.getLanguage("html");
 
-  if(htmlLanguage !== null && !!htmlLanguage.removeFileExtension) { // Language.removeFileExtension was introduced in Sprint 38, github.com/adobe/brackets/issues/6873
+  if(htmlLanguage !== null) {
     htmlLanguage.removeFileExtension("hbr");
     htmlLanguage.removeFileExtension("hbs");
-    htmlLanguage.removeFileExtension("handlebars");
-    fileExtensions = ["hbr", "handlebars", "hbs"];
+    htmlLanguage.removeFileExtension("handlebars");    
   }
 
   LanguageManager.defineLanguage("handlebars", {

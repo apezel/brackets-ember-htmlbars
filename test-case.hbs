@@ -37,8 +37,11 @@
     
     
     {{log "Look at me!"}}
+    {{log 'Look at me!'}}
   </div>
   <button {{bind-attr title="myProperty"}}>Button with bound title</button>
   <button {{bind-attr title='myProperty'}}>Button with bound title and other string delimiters</button>
+  <button {{bind-attr title="myProperty'}}>Button with bound title and other string delimiters</button>
+  <button {{bind-attr title='myProperty"}}>Button with bound title and other string delimiters</button>
   </body>
 </html>

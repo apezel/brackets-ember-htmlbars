@@ -154,6 +154,12 @@ define(function () {
         if (state.helperName) {
           state.helperName = false;
 
+          if (!state.opening && !state.closing && stream.match(/^\s*?else/, false)) {
+            stream.match(/^\s*?else/, true);
+            stream.eatSpace();
+            return 'tag';
+          }
+          
           if (!state.opening && !state.closing && stream.match(/^[\w\d\-\_\$\.\/\@]+\s*\}\}/, false)) {
             stream.match(/^[\w\d\-\_\$\.\/\@]+/, true);
             stream.eatSpace();
@@ -201,6 +207,9 @@ define(function () {
         if (stream.match('}}', true)) {
           state.argumentList = false;
           state.inHandlebar = false;
+          
+          state.attributeKeyword = false;
+          state.attributeAssignment = false;
           return 'bracket';
         }
         if (!state.attributeKeyword && !state.attributeAssignment && !state.attributeValue && stream.match(/^[\w\d\-\_\$]+\s*=/, false)) {
@@ -232,26 +241,26 @@ define(function () {
         } 
         if (state.attributeValue) {
           state.attributeValue = false;
-          if (stream.match(/^"([^\\"]|\\\\|\\")*"/, false)) {
-            stream.match(/^"([^\\"]|\\\\|\\")*"/, true);
+          if (stream.match(/^("([^\\"]|\\\\|\\")*")|('([^\\']|\\\\|\\')*')/, false)) {
+            stream.match(/^("([^\\"]|\\\\|\\")*")|('([^\\']|\\\\|\\')*')/, true);
             stream.eatSpace();
             return 'atom';
           }
-          if (stream.match(/^"([^\\"]|\\\\|\\")*"/, true)) {
+          if (stream.match(/^("([^\\"]|\\\\|\\")*")|('([^\\']|\\\\|\\')*')/, true)) {
             stream.eatSpace();
             return 'atom';
           }
-          stream.match(/^[^\s]+/, true);
+          stream.match(/^(\s|}})+/, true);
           console.log('Invalid attribute value');
           return 'invalidchar';
         }
         if (state.argumentList) {
-          if (stream.match(/^"([^\\"]|\\\\|\\")*"/, false)) {
-            stream.match(/^"([^\\"]|\\\\|\\")*"/, true);
+          if (stream.match(/^("([^\\"]|\\\\|\\")*")|('([^\\']|\\\\|\\')*')/, false)) {
+            stream.match(/^("([^\\"]|\\\\|\\")*")|('([^\\']|\\\\|\\')*')/, true);
             stream.eatSpace();
             return 'atom';
           }
-          if (stream.match(/^"([^\\"]|\\\\|\\")*"/, true)) {
+          if (stream.match(/^("([^\\"]|\\\\|\\")*")|('([^\\']|\\\\|\\')*')/, true)) {
             stream.eatSpace();
             return 'atom';
           }

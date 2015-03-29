@@ -26,7 +26,7 @@ module.exports = function(grunt) {
         options: {
           archive: function () {
             // The global value git.tag is set by another task
-            return 'handlebars-templates-' + pkg.version + '.zip';
+            return 'htmlbars-templates-' + pkg.version + '.zip';
           },
           pretty: true
         },
@@ -48,4 +48,4 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['jshint', 'watch']);
   grunt.registerTask('test', ['jshint']);
   grunt.registerTask('dist', ['jshint', 'compress']);
-}; 
+};

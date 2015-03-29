@@ -233,7 +233,7 @@ define(function () {
         if (state.attributeValue) {
           state.attributeValue = false;
           if (stream.match(/^"([^\\"]|\\\\|\\")*"/, false)) {
-            stream.match(/^"([^\\"]|\\\\|\\")*'/, true);
+            stream.match(/^"([^\\"]|\\\\|\\")*"/, true);
             stream.eatSpace();
             return 'atom';
           }
@@ -268,17 +268,17 @@ define(function () {
     return codeMirror.overlayMode(codeMirror.getMode(config, parserConfig.backdrop || 'text/html'), mustacheOverlay);
   });
 
-  var fileExtensions = ['handlebars', 'hbs'];
+  var fileExtensions = ['handlebars', 'hbs', 'hdbs'];
   var htmlLanguage = LanguageManager.getLanguage('html');
 
   if(htmlLanguage !== null) {
-    htmlLanguage.removeFileExtension('hbr');
+    htmlLanguage.removeFileExtension('hdbs');
     htmlLanguage.removeFileExtension('hbs');
     htmlLanguage.removeFileExtension('handlebars');    
   }
 
   LanguageManager.defineLanguage('handlebars', {
-    'name': 'handlebars',
+    'name': 'Handlebars/HTMLBars',
     'mode': 'handlebars',
     'fileExtensions': fileExtensions,
     'blockComment': ['{{!--', '--}}']

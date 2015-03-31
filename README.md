@@ -19,4 +19,4 @@ Contributing
 
 This project was created and earlier maintaned by [Bryan Eliott](https://github.com/Fordi). If you want to contribute features or fixes now the new maintainer is [Karl-Johan Sjögren](https://github.com/karl-sjogren) and this repo will be used.
 
-Please adhere to the codestyled used in main.js, we use two spaces for indentation, not tabs, not ever again (sorry Bryan!). There is a gruntfile included in the project that enforces some basic rules using JShint.
+Please adhere to the codestyle used in main.js, we use two spaces for indentation, not tabs, not ever again (sorry Bryan!). There is a gruntfile included in the project that enforces some basic rules using JShint.

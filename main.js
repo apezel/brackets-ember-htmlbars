@@ -214,17 +214,18 @@ define(function () {
         }
           
         if (!state.attributeKeyword && !state.attributeAssignment && !state.attributeValue) {
-            
+        
           if (state.opening && stream.match(/^\|/, false)) {
+            state.argumentList = !state.argumentList;
             stream.match(/^\|/, true);
             stream.eatSpace();
             return 'bracket';
           }
             
           if (!state.closing && stream.match(/^\s*?(else|if|as|in)/, false)) {
-             stream.match(/^\s*?(else|if|as|in)/, true);
-             stream.eatSpace();
-             return 'keyword';
+            stream.match(/^\s*?(else|if|as|in)/, true);
+            stream.eatSpace();
+            return 'keyword';
           }
             
         }
@@ -279,11 +280,11 @@ define(function () {
           if (stream.match(/^("([^\\"]|\\\\|\\")*")|('([^\\']|\\\\|\\')*')/, false)) {
             stream.match(/^("([^\\"]|\\\\|\\")*")|('([^\\']|\\\\|\\')*')/, true);
             stream.eatSpace();
-            return 'atom';
+            return 'string';
           }
           if (stream.match(/^("([^\\"]|\\\\|\\")*")|('([^\\']|\\\\|\\')*')/, true)) {
             stream.eatSpace();
-            return 'atom';
+            return 'string';
           }
           if (stream.match(/^[A-Za-z0-9\._$]+/, true)) {
             stream.eatSpace();

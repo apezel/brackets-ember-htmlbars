@@ -167,6 +167,7 @@ define(function () {
             return 'variable';
           }
           if (stream.match(/^[\w\d\-\_\$]+/, false)) {
+            var reserved = stream.match(/^(if|unless|else|each|with)/, false);
             stream.match(/^[\w\d\-\_\$]+/, true);
             state.helperName = false;
             if (state.closing) {
@@ -176,14 +177,14 @@ define(function () {
                 console.log('Mismatched tags');
                 return 'invalidchar';
               }
-              return 'keyword';
+              return reserved ? 'keyword':'tag';
             }
             if (state.opening) {
               stream.opening = false;
               state.moustacheStack.push(stream.current());
             }
             state.argumentList = true;
-            return 'keyword';
+            return reserved ? 'keyword':'tag';
           }
           stream.next();
           return 'invalidchar';

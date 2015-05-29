@@ -91,7 +91,8 @@ define(function () {
           helperName: false,
           comment: false,
           safeComment: false,
-          doNotEscape: false
+          doNotEscape: false,
+          blockParam: false
         };
       },
       token: function (stream, state) {
@@ -216,7 +217,7 @@ define(function () {
         if (!state.attributeKeyword && !state.attributeAssignment && !state.attributeValue) {
         
           if (state.opening && stream.match(/^\|/, false)) {
-            state.argumentList = !state.argumentList;
+            state.blockParam = !state.blockParam;
             stream.match(/^\|/, true);
             stream.eatSpace();
             return 'bracket';
@@ -256,7 +257,8 @@ define(function () {
             return 'invalidchar';
           }
           return 'operator';
-        } 
+        }
+          
         if (state.attributeValue) {
           state.attributeValue = false;
           if (stream.match(/^("([^\\"]|\\\\|\\")*")|('([^\\']|\\\\|\\')*')/, false)) {
@@ -276,6 +278,7 @@ define(function () {
           console.log('Invalid attribute value');
           return 'invalidchar';
         }
+          
         if (state.argumentList) {
           if (stream.match(/^("([^\\"]|\\\\|\\")*")|('([^\\']|\\\\|\\')*')/, false)) {
             stream.match(/^("([^\\"]|\\\\|\\")*")|('([^\\']|\\\\|\\')*')/, true);
@@ -286,12 +289,17 @@ define(function () {
             stream.eatSpace();
             return 'string';
           }
+        }
+          
+        if (state.argumentList || state.blockParam) {
+            
           if (stream.match(/^[A-Za-z0-9\._$]+/, true)) {
             stream.eatSpace();
             return 'variable';
           }
+            
         }
-
+          
         console.log('Bad data: ', stream.next(), state);
         return 'invalidchar';
       }

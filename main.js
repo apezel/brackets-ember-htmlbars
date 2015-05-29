@@ -167,7 +167,7 @@ define(function () {
             return 'variable';
           }
           if (stream.match(/^[\w\d\-\_\$]+/, false)) {
-            var reserved = stream.match(/^(if|unless|else|each|with|view)/, false);
+            var reserved = stream.match(/^(if|unless|else|each|with|view|action)/, false);
             stream.match(/^[\w\d\-\_\$]+/, true);
             state.helperName = false;
             if (state.closing) {

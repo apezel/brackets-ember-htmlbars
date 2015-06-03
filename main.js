@@ -99,7 +99,7 @@ define(function () {
         /*jslint regexp:true */
         stream.eatSpace();
         if (!state.inHandlebar) {
-          if (stream.match('{{')) {
+          if (stream.match('{{')) {// || stream.match(/<((?:\w[\w\$:\d]++(?:\-[\w\$:\d]++)+))(?:\s|>)/, false)) {
             stream.eatSpace();
             state.inHandlebar = true;
             state.helperName = true;
@@ -167,7 +167,7 @@ define(function () {
             return 'variable';
           }
           if (stream.match(/^[\w\d\-\_\$]+/, false)) {
-            var reserved = stream.match(/^(if|unless|else|each|with|view|action|component)/, false);
+            var reserved = stream.match(/^(if|unless|else|each|with|view|action|component|yield)/, false);
             stream.match(/^[\w\d\-\_\$]+/, true);
             state.helperName = false;
             if (state.closing) {
@@ -224,7 +224,7 @@ define(function () {
             return 'bracket';
           }
             
-          if (!state.closing && stream.match(/^\s*?(else|if|as|in)/, false)) {
+          if (!state.closing && stream.match(/^\s*?(else|if|as|in)\s+/, false)) {
             stream.match(/^\s*?(else|if|as|in)/, true);
             stream.eatSpace();
             return 'keyword';

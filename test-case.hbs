@@ -35,10 +35,9 @@
       <h1>Unknown Author</h1>
     {{/if}}
       
-      
     {{#my-component as |myComp|}}
     
-      {{input action=(action 'sayHello' target=myComp)}}
+      {{input action=(action 'sayHello' target=myComp) value=hello}}
       
     {{/my-component}}
       
@@ -48,7 +47,7 @@
     
     {{log "Look at me!"}}
     {{log 'Look at me!'}}
-      
+
   </div>
   <button {{bind-attr title="myProperty"}}>Button with bound title</button>
   <button {{bind-attr title='myProperty'}}>Button with bound title and other string delimiters</button>

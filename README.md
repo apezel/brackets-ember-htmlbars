@@ -1,9 +1,9 @@
-Ember HtmlBars highlighter for Brackets
+Ember HTMLBars highlighter for Brackets
 ===============================
 
 A syntax highlighting plugin for [Ember HtmlBars templates](http://www.emberjs.com/) in the [Brackets editor](http://brackets.io/).
 
-After installation you will get mixed syntax highlightning for html and handlebars in .hbs and .handlebars files.
+![HTMLBars Syntax highlighting](http://www.apyx.fr/medias/ember-js-htmlbars-brackets.png)
 
 Installing
 ----------

@@ -1,17 +1,19 @@
 {
-  "name": "htmlbars",
-  "title": "Handlebars/HTMLBars Syntax Highlighter",
-  "description": "Add syntax highlighting support for the handlebars/htmlbars template language.",
-  "homepage": "https://github.com/karl-sjogren/brackets-handlebars-templates",
-  "version": "1.2.0",
-  "author": "Karl-Johan Sjögren (http://karl-sjogren.com)",
+  "name": "emberjs-htmlbars",
+  "title": "Ember.js HTMLBars Syntax Highlighter",
+  "description": "Add syntax highlighting support for the htmlbars template language.",
+  "homepage": "https://github.com/apezel/brackets-ember-htmlbars",
+  "version": "1.0.0",
+  "author": "Arnaud PEZEL (http://www.apyx.fr)",
   "license": "MIT",
   "categories": "language",
   "keywords": [
     "handlebars",
     "htmlbars",
+	"ember",
+	"emberjs",
+	"ember.js",
     "hbs",
-    "ember"
   ],
   "engines": {
     "brackets": ">=0.38"

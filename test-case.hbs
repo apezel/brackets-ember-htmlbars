@@ -33,11 +33,22 @@
      <h1>{{firstName}} {{lastName}}</h1>
     {{else}}
       <h1>Unknown Author</h1>
-    {{/if}} 
+    {{/if}}
+      
+      
+    {{#my-component as |myComp|}}
     
+      {{input action=(action 'sayHello' target=myComp)}}
+      
+    {{/my-component}}
+      
+    <div class="{{if isOk 'ok'}}" {{action 'sayHello'}}></div>
+      
+    <my-component attr={{mut hello}}></my-component>
     
     {{log "Look at me!"}}
     {{log 'Look at me!'}}
+      
   </div>
   <button {{bind-attr title="myProperty"}}>Button with bound title</button>
   <button {{bind-attr title='myProperty'}}>Button with bound title and other string delimiters</button>

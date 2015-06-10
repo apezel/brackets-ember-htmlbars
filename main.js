@@ -218,7 +218,7 @@ define(function () {
           
         if (!state.attributeKeyword && !state.attributeAssignment && !state.attributeValue) {
         
-          if (state.opening && stream.match(/^\|/, false)) {
+          if (!state.closing && stream.match(/^\|/, false)) {
             state.blockParam = !state.blockParam;
             stream.match(/^\|/, true);
             stream.eatSpace();

@@ -12,13 +12,9 @@
     "htmlbars",
 	"ember",
 	"emberjs",
-	"ember.js",
-    "hbs",
+    "hbs"
   ],
   "engines": {
     "brackets": ">=0.38"
-  },
-  "devDependencies": {
-  
   }
 }

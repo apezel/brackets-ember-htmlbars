@@ -1,7 +1,7 @@
 {
   "name": "emberjs-htmlbars",
-  "title": "Ember.js HTMLBars Syntax Highlighter",
-  "description": "Add syntax highlighting support for the htmlbars template language.",
+  "title": "Ember.js templates (HTMLBars) Syntax Highlighter",
+  "description": "Add syntax highlighting support for ember.js template language HTMLBars.",
   "homepage": "https://github.com/apezel/brackets-ember-htmlbars",
   "version": "1.0.0",
   "author": "Arnaud PEZEL (http://www.apyx.fr)",

@@ -25,8 +25,8 @@
     
     <h2>By {{fullName author}}</h2>
     
-    {{#each array}}
-      ({{@index}}/{{@key}}): {{this}}
+    {{#each array as |val index|}}
+      ({{index}}): {{val}}
     {{/each}}
     
     {{#if author}}
@@ -41,9 +41,15 @@
       
     {{/my-component}}
       
-    <div class="{{if isOk 'ok'}}" {{action 'sayHello'}}></div>
+    <my-component attr={{mut hello}}>
       
-    <my-component attr={{mut hello}}></my-component>
+        <div class="{{if isOk 'ok'}} {{unless isOk 'bad'}}" {{action 'sayHello'}}></div>
+      
+    </my-component>
+      
+    {{partial './partial'}}
+      
+    {{component componentName}}
     
     {{log "Look at me!"}}
     {{log 'Look at me!'}}

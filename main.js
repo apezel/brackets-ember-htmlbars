@@ -140,6 +140,18 @@ define(function () {
                     }
                     return null;
                 }
+				
+                if (state.inHandlebar && stream.match('(')) {
+                    stream.eatSpace();
+                    state.helperName = true;
+                    state.closing = false;
+                    state.opening = false;
+                    state.doNotEscape = false;
+                    state.comment = false;
+                    stream.eatSpace();
+                    return 'bracket';
+                }
+				
                 // Since comments can contain }} it needs to be processed first
                 if (state.comment) {
                     if ((state.safeComment === true && stream.match('--}}')) || (state.safeComment === false && stream.match('}}'))) {
@@ -190,7 +202,8 @@ define(function () {
                     stream.next();
                     return 'invalidchar';
                 }
-                if (state.endOnly) {
+                
+				if (state.endOnly) {
                     state.endOnly = false;
                     if (stream.match('}}', true)) {
                         stream.eatSpace();
@@ -201,12 +214,14 @@ define(function () {
                     stream.next();
                     return 'invalidchar';
                 }
-                if (state.doNotEscape && stream.match('}}}', true)) {
+                
+				if (state.doNotEscape && stream.match('}}}', true)) {
                     state.argumentList = false;
                     state.inHandlebar = false;
                     state.doNotEscape = false;
                     return 'operator';
                 }
+				
                 if (stream.match('}}', true)) {
                     state.argumentList = false;
                     state.inHandlebar = false;
@@ -215,6 +230,15 @@ define(function () {
                     state.attributeAssignment = false;
                     return 'bracket';
                 }
+				
+				if (state.inHandlebar && stream.match(')', true)) {
+				
+                    state.attributeKeyword = false;
+                    state.attributeAssignment = false;
+					//state.argumentList = false;
+                    return 'bracket';
+				
+				}
 
                 if (!state.attributeKeyword && !state.attributeAssignment && !state.attributeValue) {
 

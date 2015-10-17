@@ -79,7 +79,7 @@ define(function () {
         };
     }
 
-    codeMirror.defineMode('handlebars', function (config, parserConfig) {
+    codeMirror.defineMode('htmlbars', function (config, parserConfig) {
         var mustacheOverlay = {
             startState: function () {
                 return {
@@ -166,6 +166,7 @@ define(function () {
                     return 'comment';
                 }
                 if (state.helperName) {
+					
                     state.helperName = false;
 
                     if (!state.opening && !state.closing && stream.match(/^else\s*\}\}/, false)) {
@@ -179,9 +180,10 @@ define(function () {
                         stream.eatSpace();
                         return 'variable';
                     }
-                    if (stream.match(/^[\w\d\-\_\$]+/, false)) {
+                    if (stream.match(/^[\w\d\-\_\.\$]+/, false)) {
+						console.log("match");
                         var reserved = stream.match(/^(if|unless|else|each|with|view|action|component|yield|partial|mut)/, false);
-                        stream.match(/^[\w\d\-\_\$]+/, true);
+                        stream.match(/^[\w\d\-\_\.\$]+/, true);
                         state.helperName = false;
                         if (state.closing) {
                             state.closing = false;
@@ -349,16 +351,23 @@ define(function () {
 
     var fileExtensions = ['handlebars', 'hbs', 'hdbs'];
     var htmlLanguage = LanguageManager.getLanguage('html');
+    var handlebarsLanguage = LanguageManager.getLanguage('handlebars');
 
     if (htmlLanguage !== null) {
-        htmlLanguage.removeFileExtension('hdbs');
-        htmlLanguage.removeFileExtension('hbs');
-        htmlLanguage.removeFileExtension('handlebars');
+            htmlLanguage.removeFileExtension('hdbs');
+            htmlLanguage.removeFileExtension('hbs');
+            htmlLanguage.removeFileExtension('handlebars');
+    }
+	
+	if (handlebarsLanguage !== null) {
+        handlebarsLanguage.removeFileExtension('hdbs');
+        handlebarsLanguage.removeFileExtension('hbs');
+        handlebarsLanguage.removeFileExtension('handlebars');
     }
 
-    LanguageManager.defineLanguage('handlebars', {
+    LanguageManager.defineLanguage('htmlbars', {
         'name': 'Handlebars/HTMLBars',
-        'mode': 'handlebars',
+        'mode': 'htmlbars',
         'fileExtensions': fileExtensions,
         'blockComment': ['{{!--', '--}}']
     });
